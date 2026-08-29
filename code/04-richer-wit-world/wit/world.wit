@@ -1,0 +1,22 @@
+package wasm-systems:shapes@0.1.0;
+
+world shapes-demo {
+  record point {
+    x: f64,
+    y: f64,
+  }
+
+  variant shape {
+    circle(f64),
+    rectangle(tuple<f64, f64>),
+    polygon(list<point>),
+  }
+
+  variant shape-error {
+    negative-dimension(string),
+    too-few-points(u32),
+  }
+
+  export area: func(s: shape) -> result<f64, shape-error>;
+  export describe: func(s: shape) -> string;
+}

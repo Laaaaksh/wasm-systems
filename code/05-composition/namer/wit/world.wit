@@ -1,0 +1,9 @@
+package wasm-systems:namer@0.1.0;
+
+interface names {
+  get-name: func() -> string;
+}
+
+world namer {
+  export names;
+}

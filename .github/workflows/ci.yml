@@ -1,0 +1,108 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  WASMTIME_VERSION: 48.0.1
+  WASM_TOOLS_VERSION: 1.258.0
+  CARGO_COMPONENT_VERSION: 0.21.1
+  WIT_BINDGEN_CLI_VERSION: 0.61.1
+  WAC_VERSION: 0.10.1
+  WKG_VERSION: 0.16.1
+  TINYGO_VERSION: 0.41.1
+
+jobs:
+  build-and-run-samples:
+    name: Build and run every sample (real CPU execution, no compile-only fallback)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-wasip1,wasm32-wasip2,wasm32-unknown-unknown
+
+      - name: Cache cargo tools
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/registry
+          key: cargo-tools-${{ env.WASM_TOOLS_VERSION }}-${{ env.CARGO_COMPONENT_VERSION }}-${{ env.WIT_BINDGEN_CLI_VERSION }}-${{ env.WAC_VERSION }}-${{ env.WKG_VERSION }}
+
+      - name: Install wasmtime
+        run: |
+          curl https://wasmtime.dev/install.sh -sSf | bash -s -- --version v${{ env.WASMTIME_VERSION }}
+          echo "$HOME/.wasmtime/bin" >> "$GITHUB_PATH"
+
+      - name: Install wasm-tools, cargo-component, wit-bindgen-cli, wac-cli, wkg
+        run: |
+          cargo install wasm-tools --version ${{ env.WASM_TOOLS_VERSION }} --locked
+          cargo install cargo-component --version ${{ env.CARGO_COMPONENT_VERSION }} --locked
+          cargo install wit-bindgen-cli --version ${{ env.WIT_BINDGEN_CLI_VERSION }} --locked
+          cargo install wac-cli --version ${{ env.WAC_VERSION }} --locked
+          cargo install wkg --version ${{ env.WKG_VERSION }} --locked
+
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+      - name: Install wit-bindgen-go
+        run: go install go.bytecodealliance.org/cmd/wit-bindgen-go@latest
+
+      - name: Install TinyGo
+        run: |
+          curl -LO https://github.com/tinygo-org/tinygo/releases/download/v${{ env.TINYGO_VERSION }}/tinygo_${{ env.TINYGO_VERSION }}_amd64.deb
+          sudo dpkg -i tinygo_${{ env.TINYGO_VERSION }}_amd64.deb
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install componentize-py
+        run: pip install componentize-py
+
+      - name: Versions actually in use (should match curriculum/00-toolchain-setup.md)
+        run: |
+          rustc --version
+          wasmtime --version
+          wasm-tools --version
+          cargo component --version
+          wit-bindgen --version
+          wac --version
+          wkg --version
+          tinygo version
+          componentize-py --version
+
+      # Every sample builds AND runs - unlike a GPU-gated curriculum,
+      # WebAssembly needs no special hardware, so there's no reason to
+      # only compile-check here.
+      - name: 01 - core-wasm-no-wasi
+        run: cd code/01-core-wasm-no-wasi && make run
+      - name: 02 - hello-component-rust
+        run: cd code/02-hello-component-rust && make run
+      - name: 03 - greet-in-three-languages
+        run: cd code/03-greet-in-three-languages && make run
+      - name: 04 - richer-wit-world
+        run: cd code/04-richer-wit-world && make demo
+      - name: 05 - composition
+        run: cd code/05-composition && make run
+      - name: 06 - host-embedding
+        run: cd code/06-host-embedding && make run
+      - name: 07 - wasi-async (build + validate only - see sample README for why)
+        run: cd code/07-wasi-async && make validate
+      - name: 08 - plugin-host-capstone
+        run: cd code/08-plugin-host-capstone && make run

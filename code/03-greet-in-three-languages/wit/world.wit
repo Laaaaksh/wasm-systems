@@ -1,0 +1,14 @@
+// The single contract all three implementations in this directory build
+// against - literally the same file, referenced by relative path from
+// rust/, python/, and go/. `deps/` was vendored from the standard WASI
+// registry with:
+//
+//   wkg wit fetch
+//
+// (wkg is the Bytecode Alliance's WebAssembly package tool - see
+// curriculum/00-toolchain-setup.md).
+package wasm-systems:greet-cli@0.1.0;
+
+world greet-cli {
+  include wasi:cli/command@0.2.3;
+}

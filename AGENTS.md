@@ -1,0 +1,19 @@
+# Project agent memory
+
+This file is the project's committed home for project-intrinsic agent knowledge: build, test, release, architecture, and sharp-edge notes that should travel with the code.
+
+- **What this repo is**: a sequenced WASI/Component Model curriculum (`curriculum/`) plus runnable, hands-on-verified components and hosts (`code/`) plus honestly-dated resource curation (`resources/`). See the root `README.md` for the pitch and `curriculum/README.md` for the stage table.
+- **Every sample actually runs, on plain CPU** — unlike a GPU-gated curriculum, there is no compile-only fallback here. `code/README.md` lists the exact toolchain versions (`rustc`, `cargo-component`, `wasmtime`, `wasm-tools`, `wit-bindgen-cli`, `wac`, `wkg`, `componentize-py`, `tinygo`) every sample was built and run against; `curriculum/00-toolchain-setup.md` has install instructions. CI (`.github/workflows/ci.yml`) installs the same pinned versions and runs (not just compiles) every sample.
+- **The one deliberate exception**: `code/07-wasi-async` builds and validates a real component but documents, with exact reproducible error text, a current `wasmtime` CLI limitation running it — see that sample's README before assuming a WASI 0.3 async sample should fully execute.
+- **Adding a sample**: one directory under `code/`, following the existing numbered-stage naming (`0N-topic-name`), with a `Makefile` exposing `make run` (or a documented equivalent target) and a `README.md` explaining what to look for. `Cargo.lock` files are committed on purpose — see `code/README.md`.
+- **Citation discipline**: every external link in `curriculum/*.md` and `resources/*.md` must be a URL someone actually fetched and confirmed live (via `gh api`, `WebFetch`, or a real install command) — this was the explicit standard the repo was built to. Several `component-model.bytecodealliance.org` paths do NOT match their apparent/intuitive names (e.g. composition docs actually live under `composing-and-distributing/composing.html`, not `creating-and-consuming/composing.html`) — always verify a doc-site URL live rather than guessing its path from a pattern.
+- **WIT dependency vendoring pattern**: several samples vendor `wasi:cli` WIT dependencies into a local `wit/deps/` directory (fetched once via `wkg wit fetch`) rather than relying on `cargo-component`'s implicit registry resolution, because tools other than `cargo-component` (`componentize-py`, `wit-bindgen-go`, the raw `wit-bindgen` crate macro) don't auto-fetch registry deps the way `cargo-component` does. See `code/03-greet-in-three-languages/wit/` for the canonical example.
+- **A real, current TinyGo limitation**: as of TinyGo 0.41.1, its Wasm component support requires a full `wasi:cli/command` world even for library-only ("reactor") components — a pure-export WIT world fails `wasm-tools component new` with a missing `wasi:cli/environment` import. Documented in `resources/common-pitfalls.md` and worked around in `code/03-greet-in-three-languages` by giving every language sample a `wasi:cli/command`-based world.
+- **`cargo-component` attaches the full `wasi:cli` world to every component it builds**, including pure-library components whose own WIT declares no WASI dependency at all (confirmed via `wasm-tools component wit` on `code/08-plugin-host-capstone`'s plugins). Don't assume a component's actual import surface matches what its own `.wit` file declares — check with `wasm-tools component wit`.
+
+## Maintaining this file
+
+Keep this file for knowledge useful to almost every future agent session in this project.
+Do not repeat what the codebase already shows; point to the authoritative file or command instead.
+Prefer rewriting or pruning existing entries over appending new ones.
+When updating this file, preserve this bar for all agents and keep entries concise.

@@ -1,0 +1,6 @@
+package wasm-systems:greeter@0.1.0;
+
+world greeter {
+  import wasm-systems:namer/names@0.1.0;
+  export greet: func() -> string;
+}

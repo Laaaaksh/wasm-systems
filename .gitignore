@@ -1,0 +1,34 @@
+# Rust build output (see code/*/Cargo.toml). Cargo.lock is committed on
+# purpose - this is a teaching repo, and the exact dependency versions each
+# sample was verified against matter more here than they would in a library.
+target/
+
+# Python build/venv artifacts (see code/03-greet-in-three-languages/python
+# and other componentize-py samples)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Built .wasm output - every sample builds its own, nothing prebuilt is
+# committed. Composed/copied output specifically:
+*.wasm
+code/05-composition/composed.wasm
+code/08-plugin-host-capstone/plugins-built/
+
+# Generated bindings - regenerated deterministically from wit/ on every
+# build, so nothing is lost by not committing them.
+**/src/bindings.rs
+**/wit_world/
+**/componentize_py_types.py
+**/componentize_py_runtime.pyi
+**/componentize_py_async_support/
+**/poll_loop.py
+code/03-greet-in-three-languages/go/gen/
+code/04-*/gen/
+
+# Editor / OS cruft
+.DS_Store
+*.swp
+.vscode/
+.idea/
