@@ -1,0 +1,10 @@
+package wasm-systems:async-demo@0.1.0;
+
+// `stream<u32>` is a WASI 0.3 / Component Model async type: a producer can
+// hand values to a consumer incrementally, across the guest/host boundary,
+// without either side blocking the whole component while it waits. This
+// world exports one function that returns a stream instead of a value -
+// see README.md for exactly how far current tooling gets running it.
+world async-demo {
+  export count-to: func(n: u32) -> stream<u32>;
+}

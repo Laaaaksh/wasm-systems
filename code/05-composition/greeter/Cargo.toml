@@ -1,0 +1,16 @@
+[package]
+name = "greeter"
+version = "0.1.0"
+edition = "2021"
+
+[package.metadata.component]
+package = "wasm-systems:greeter"
+
+[package.metadata.component.target.dependencies]
+"wasm-systems:namer" = { path = "../namer/wit" }
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wit-bindgen-rt = { version = "0.44.0", features = ["bitflags"] }

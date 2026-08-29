@@ -1,0 +1,6 @@
+package wasm-systems:plugin@0.1.0;
+
+world plugin {
+  export name: func() -> string;
+  export transform: func(input: string) -> string;
+}

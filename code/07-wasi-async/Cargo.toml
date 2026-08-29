@@ -1,0 +1,18 @@
+[package]
+name = "wasi-async-demo"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+# Pinned deliberately: this exact 0.46.0 is the version this sample was
+# verified against. The guest-side async API in wit-bindgen genuinely
+# changed shape between 0.41 and 0.46 while writing this sample (see
+# README.md) - do not assume a newer or older version exposes the same
+# `StreamWriter`/`StreamReader` methods used in src/lib.rs.
+[dependencies]
+wit-bindgen = "=0.46.0"
+
+[profile.release]
+opt-level = "s"
