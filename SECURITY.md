@@ -15,9 +15,9 @@ Worth reporting privately:
   that would undermine the exact thing the sample is meant to teach.
 - A sample that executes something fetched over the network without saying
   so, or that shells out to a command built from unsanitized input.
-- Anything in [`code/09-plugin-host`](code/09-plugin-host) (the untrusted-component
-  loader) that doesn't actually sandbox the loaded component the way its
-  README claims.
+- Anything in [`code/08-plugin-host-capstone`](code/08-plugin-host-capstone)
+  (the untrusted-plugin loader) that doesn't actually sandbox a loaded
+  plugin the way its README claims.
 
 Not a security issue, just a normal bug report (open a public issue instead):
 

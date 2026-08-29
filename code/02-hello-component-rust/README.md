@@ -3,7 +3,7 @@
 The same idea as [`01-core-wasm-no-wasi`](../01-core-wasm-no-wasi), but built
 as a **component** instead of a raw core module, using `cargo component`.
 
-Companion to [`curriculum/02-first-component-rust.md`](../../curriculum/02-first-component-rust.md).
+Companion to [`curriculum/02-first-component.md`](../../curriculum/02-first-component.md).
 Built and run against `cargo-component` 0.21.1, `wasmtime` 48.0.1, `wasm-tools`
 1.258.0, `rustc` 1.98.0.
 

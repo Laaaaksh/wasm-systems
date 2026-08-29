@@ -38,7 +38,7 @@ signatures for those functions, so a Wasm binary you build once can run
 against any host that implements the same WASI interfaces — instead of
 every runtime inventing its own bespoke syscall names, which is exactly
 what browser-only Wasm and various pre-WASI runtimes used to do.
-[Stage 2](../../curriculum/02-first-component-rust.md) builds on this by
+[Stage 2](../../curriculum/02-first-component.md) builds on this by
 using WASI through the higher-level Component Model instead of raw
 `wasi_snapshot_preview1` imports.
 

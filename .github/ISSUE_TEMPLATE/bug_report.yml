@@ -1,0 +1,40 @@
+name: Bug report
+description: Something in a sample or the curriculum is wrong
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a problem.
+  - type: input
+    id: location
+    attributes:
+      label: Where
+      description: File or curriculum stage this is about, e.g. `code/04-richer-wit-world/src/lib.rs` or `curriculum/06-host-embedding-and-capabilities.md`.
+      placeholder: "code/04-richer-wit-world/src/lib.rs"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What's wrong?
+      description: A build error, a wrong claim, a dead link, incorrect component behavior, etc. Include the exact error text if there is one.
+      placeholder: |
+        1. Ran `make run` in code/04-richer-wit-world
+        2. Got this error: ...
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Toolchain versions
+      description: Output of `wasmtime --version`, `cargo component --version`, `wasm-tools --version`, etc. — whichever are relevant. See curriculum/00-toolchain-setup.md for the versions this repo was verified against.
+    validations:
+      required: false
+  - type: input
+    id: os
+    attributes:
+      label: OS / architecture
+      description: e.g. macOS 15 arm64, Ubuntu 24.04 x86_64
+    validations:
+      required: false
