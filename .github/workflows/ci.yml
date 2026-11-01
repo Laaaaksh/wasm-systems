@@ -50,11 +50,23 @@ jobs:
 
       - name: Install wasm-tools, cargo-component, wit-bindgen-cli, wac-cli, wkg
         run: |
-          cargo install wasm-tools --version ${{ env.WASM_TOOLS_VERSION }} --locked
-          cargo install cargo-component --version ${{ env.CARGO_COMPONENT_VERSION }} --locked
-          cargo install wit-bindgen-cli --version ${{ env.WIT_BINDGEN_CLI_VERSION }} --locked
-          cargo install wac-cli --version ${{ env.WAC_VERSION }} --locked
-          cargo install wkg --version ${{ env.WKG_VERSION }} --locked
+          # The cache restores ~/.cargo/bin but not cargo's install records, so a
+          # plain `cargo install` fails with "binary already exists in destination".
+          # Skip when the cached binary reports the pinned version; otherwise
+          # --force overwrites whatever a stale or partial cache left behind.
+          install_tool() {
+            local crate="$1" bin="$2" version="$3"
+            if "$bin" --version 2>/dev/null | grep -qF "$version"; then
+              echo "$bin $version restored from cache"
+            else
+              cargo install "$crate" --version "$version" --locked --force
+            fi
+          }
+          install_tool wasm-tools wasm-tools ${{ env.WASM_TOOLS_VERSION }}
+          install_tool cargo-component cargo-component ${{ env.CARGO_COMPONENT_VERSION }}
+          install_tool wit-bindgen-cli wit-bindgen ${{ env.WIT_BINDGEN_CLI_VERSION }}
+          install_tool wac-cli wac ${{ env.WAC_VERSION }}
+          install_tool wkg wkg ${{ env.WKG_VERSION }}
 
       - name: Install Go
         uses: actions/setup-go@v5
