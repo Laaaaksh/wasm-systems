@@ -6,7 +6,7 @@
 capability-secure host and reason about the Canonical ABI" — with
 runnable, hands-on-verified code at every step.**
 
-[![CI](https://github.com/Laaaaksh/wasm-systems/actions/workflows/ci.yml/badge.svg)](https://github.com/Laaaaksh/wasm-systems/actions/workflows/ci.yml)
+[![CI](https://github.com/attentionfs/wasm-systems/actions/workflows/ci.yml/badge.svg)](https://github.com/attentionfs/wasm-systems/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-purple.svg)](LICENSE)
 [![Wasmtime](https://img.shields.io/badge/wasmtime-48.0.1-654FF0)](code/README.md)
 
