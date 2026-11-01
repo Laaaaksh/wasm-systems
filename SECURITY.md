@@ -29,7 +29,7 @@ Not a security issue, just a normal bug report (open a public issue instead):
 
 Use GitHub's private vulnerability reporting:
 
-> https://github.com/attentionfs/wasm-systems/security/advisories/new
+> https://github.com/Laaaaksh/wasm-systems/security/advisories/new
 
 That reaches the maintainer privately so any real issue can be fixed before
 it's discussed in public.
